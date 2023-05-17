@@ -63,6 +63,7 @@ public class SignalManager extends Thread {
                     case Signal.PLAYER_SEES_OWN_CARD -> playerSeesOwnCard(pack.data.getAsJsonObject());
                     case Signal.ASK_PLAYER_SELECT_OPONENT -> selectOponent();
                     case Signal.ASK_PLAYER_SELECT_OPONENT_CARD -> selectOpopnentCard(pack.data.getAsString());
+                    case Signal.PLAYER_SWITCH_CARD_PLAYER -> playerSwitchCardPlayer(pack.data.getAsJsonObject());
 
                     /*
                     case Signal.ENVIAR_NOMBRE:                       manejarEnviarNombre();              break;
@@ -213,6 +214,15 @@ public class SignalManager extends Thread {
         System.out.println("Select one card from " + player);
         int index  = Utilidades.leerEntero("");
         writter.packAndWrite(0, index);
+    }
+
+    private void playerSwitchCardPlayer(JsonObject jsonObject) {
+        String player = jsonObject.get("player_uid").getAsString();
+        int pCardIndex = jsonObject.get("p_card_index").getAsInt();
+        String oponent = jsonObject.get("oponent_uid").getAsString();
+        int oCardIndex = jsonObject.get("o_card_index").getAsInt();
+
+        System.out.println("Player" + player + " has changed his card number: " + pCardIndex + " with player´s " + oponent + " card number: " + oCardIndex);
     }
 
 
