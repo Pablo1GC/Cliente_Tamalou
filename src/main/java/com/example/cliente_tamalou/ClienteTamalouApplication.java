@@ -41,7 +41,7 @@ public class ClienteTamalouApplication {
             GameFunctionality game = new GameFunctionality();
             SignalManager manager = new SignalManager(entrada, salida, game, socketAlServidor);
 
-            manager.enviarSenal(Signal.CONECTARSE);
+            manager.enviarSenal(Signal.CONNECT);
             System.out.println("Enviada senal de conectarse");
 
 

@@ -2,40 +2,38 @@ package com.example.cliente_tamalou.socket;
 
 public class Signal {
 
-    public static final int SI = 1;
+    // Signal indicating an error has occurred.
+    public static final int ERROR = -1;
+
+    // Signal indicating a negative response.
     public static final int NO = 0;
 
-    public static final int CONECTARSE = 299328;
-    public static final int JUGADORES_EN_LOBBY        = 923;
+    // Signal indicating an affirmative response.
+    public static final int YES = 1;
 
+    // Signal indicating a connection.
+    public static final int CONNECT = 299328;
 
-    public static final int ENVIAR_SELECCION          = 51; // Piedra papel o tijera
-    public static final int ENVIAR_SELECCION_RIVAL    = 52;
-    public static final int ENVIAR_NOMBRE             = 53;
-
-    public static final int NOMBRE_DEL_RIVAL          = 940;
-
-    public static final int COMENZAR_ENFRENTAMIENTO   = 991;
-    public static final int COMENZAR_TORNEO           = 992;
-
-    public static final int FINAL_DE_RONDA            = 54;
-    public static final int FINAL_DE_ENFRENTAMIENTO   = 55;
-    public static final int FINAL_DE_TORNEO           = 56;
-    public static final int CONEXION_EXITOSA          = 58;
+    // Signal for sending a selection.
+    public static final int SUCCESSFUL_CONNECTION = 58;
 
 
 
+
+    // GAME SIGNALS
+    // Signal indicating a player has joined the game.
     public static final int PLAYER_JOINED_GAME        = 21;
+    // Signal indicating the game has started.
     public static final int START_GAME                = 22;
-    public static final int START_TURN                = 23;
-    public static final int OTHER_PLAYER_TURN         = 24;
     public static final int END_GAME                  = 25;
 
-
-
-
     // ROUND SIGNALS
-    public static final int END_ROUND                 = 131;
+    // Signal indicating it's the player's turn to play.
+    public static final int PLAYER_TURN_STARTS = 23;
+    // Signal indicating it's the other player's turn to play.
+    public static final int OTHER_PLAYER_TURN         = 24;
+    // Signal indicating the end of a round.
+    public static final int ROUND_END = 25;
     public static final int SHOW_LAST_CARD_DECK       = 132;
     public static final int SHOW_LAST_CARD_DISCARTED  = 133;
     public static final int ASK_PLAYER_TO_STAND       = 134;
@@ -43,18 +41,18 @@ public class Signal {
     public static final int OTHER_PLAYER_SEES_CARD = 136;
     public static final int PLAYER_DISCARDS_CARD      = 137;
     public static final int PLAYER_SWITCH_CARD_DECK   = 138;
-    public static final int PLAYER_USE_CARD_POWER     = 139;
     public static final int ASK_PLAYER_SELECT_OPONENT = 140;
     public static final int ASK_PLAYER_SELECT_PLAY    = 141;
     public static final int ASK_PLAYER_SELECT_PLAY_2  = 142;
     public static final int ASK_PLAYER_SWITCH_CARD    = 143;
     public static final int ASK_PLAYER_SELECT_CARD    = 144;
-    public static final int PLAYER_POINTS_PENALTY     = 145;
+    public static final int PLAYER_POINTS_PENALTY     = 180;
     public static final int PLAYER_ONE_CARD_LESS      = 146;
     public static final int PLAYER_TURN_ENDED         = 147;
     public static final int PLAYER_CARDS_EMPTY        = 148;
     public static final int OTHER_PLAYER_STANDS       = 149;
     public static final int PLAYER_SEES_OWN_CARD      = 150;
+    public static final int PLAYER_SEES_OPONENT_CARD      = 153;
     public static final int ASK_PLAYER_SELECT_OPONENT_CARD      = 151;
     public static final int PLAYER_SWITCH_CARD_PLAYER     = 145;
 
@@ -86,7 +84,6 @@ public class Signal {
 
     public static final int PREGUNTA_REVANCHA         = 666;
 
-    public static final int ERROR                     = -1;
     public static final int SELECCION_INCORRECTA      = -2;
 
     public static final char SEPARADOR                 = '|';

@@ -48,7 +48,12 @@ public class SignalManager extends Thread {
                     case Signal.END_GAME -> endGame(pack.data.getAsString());
 
                     // ROUND CASES
-                    case Signal.START_TURN -> startYourTurn();
+                    case Signal.ROUND_END -> roundEnded();
+                    case Signal.PLAYER_TURN_STARTS -> startYourTurn();
+                    case Signal.PLAYER_TURN_ENDED -> endPlayerTurn(pack.data.getAsString());
+                    case Signal.PLAYER_CARDS_EMPTY -> playerCardsEmpty(pack.data.getAsString());
+                    case Signal.PLAYER_POINTS_PENALTY -> pointsPenalty(pack.data.getAsString());
+                    case Signal.PLAYER_ONE_CARD_LESS -> playerDiscardsCard(pack.data.getAsJsonObject());
                     case Signal.OTHER_PLAYER_TURN -> startOtherPlayerTurn(pack.data.getAsString());
                     case Signal.SHOW_LAST_CARD_DISCARTED -> seeLastCardDiscarted(pack.data.getAsString());
                     case Signal.ASK_PLAYER_TO_STAND -> askToStand();
@@ -58,12 +63,14 @@ public class SignalManager extends Thread {
                     case Signal.ASK_PLAYER_SELECT_PLAY_2 -> selectPlay2(pack.data.getAsInt());
                     case Signal.PLAYER_DISCARDS_CARD -> cardIsDiscarted(pack.data.getAsString());
                     case Signal.ASK_PLAYER_SELECT_CARD -> chooseOneOfYourCards();
-                    case Signal.OTHER_PLAYER_SEES_CARD ->  otherPlayerSeesCard(pack.data.getAsString(), pack.data.getAsInt());
-                    case Signal.PLAYER_SWITCH_CARD_DECK -> playerSwitchedCardDeck(pack.data.getAsString(), pack.data.getAsInt());
+                    case Signal.OTHER_PLAYER_SEES_CARD ->  otherPlayerSeesCard(pack.data.getAsJsonObject());
+                    case Signal.PLAYER_SWITCH_CARD_DECK -> playerSwitchedCardDeck(pack.data.getAsJsonObject());
                     case Signal.PLAYER_SEES_OWN_CARD -> playerSeesOwnCard(pack.data.getAsJsonObject());
                     case Signal.ASK_PLAYER_SELECT_OPONENT -> selectOponent();
-                    case Signal.ASK_PLAYER_SELECT_OPONENT_CARD -> selectOpopnentCard(pack.data.getAsString());
+                    case Signal.ASK_PLAYER_SELECT_OPONENT_CARD -> selectOponentCard(pack.data.getAsString());
+                    case Signal.PLAYER_SEES_OPONENT_CARD -> playerSeesOponentCard(pack.data.getAsJsonObject());
                     case Signal.PLAYER_SWITCH_CARD_PLAYER -> playerSwitchCardPlayer(pack.data.getAsJsonObject());
+                    case Signal.ASK_PLAYER_SWITCH_CARD -> askPlayerSwitchCard();
 
                     /*
                     case Signal.ENVIAR_NOMBRE:                       manejarEnviarNombre();              break;
@@ -110,11 +117,40 @@ public class SignalManager extends Thread {
         writter.packAndWrite(senal, "0gNvZ6L6DnP1LNoiPCQ6mlpom0j1");
     }
 
+
+
+
     private void startGame(JsonObject asJsonObject) {
     }
 
     private void endGame(String winner) {
         System.out.println("The winner is: " + winner);
+    }
+
+    private void endPlayerTurn(String player) {
+        System.out.println("Player " + player + " turn has ended.");
+    }
+
+    private void roundEnded() {
+        System.out.println("Round has ended");
+    }
+
+    private void playerCardsEmpty(String player) {
+        System.out.println("Player " + player + " has discarted all his cards!");
+    }
+
+    private void playerDiscardsCard(JsonObject jsonObject) {
+        String player = jsonObject.get("player_uid").getAsString();
+        String card = jsonObject.get("card").getAsString();
+        int index = jsonObject.get("card_index").getAsInt();
+
+        System.out.println("Player" + player + " has discarted his card with index: " + index + " the card " + card +
+                " is now in the discarted deck.");
+    }
+
+    private void pointsPenalty(String player) {
+        System.out.println("The card does not have the same value, player " + player + "" +
+                "has been penalized with 5 points.");
     }
 
 
@@ -189,11 +225,15 @@ public class SignalManager extends Thread {
         writter.packAndWrite(0, index);
     }
 
-    private void otherPlayerSeesCard(String player, int index) {
+    private void otherPlayerSeesCard(JsonObject jsonObject) {
+        String player = jsonObject.get("player_uid").getAsString();
+        int index = jsonObject.get("card_index").getAsInt();
         System.out.println("Player " + player + " has seen his card number: " + index);
     }
 
-    private void playerSwitchedCardDeck(String player, int index) {
+    private void playerSwitchedCardDeck(JsonObject jsonObject) {
+        String player = jsonObject.get("player_uid").getAsString();
+        int index = jsonObject.get("card_index").getAsInt();
         System.out.println("Player " + player + " has switched his card number: " + index + " with the card of the deck.");
     }
 
@@ -210,10 +250,19 @@ public class SignalManager extends Thread {
         writter.packAndWrite(0, oponentUid);
     }
 
-    private void selectOpopnentCard(String player) {
+    private void selectOponentCard(String player) {
         System.out.println("Select one card from " + player);
         int index  = Utilidades.leerEntero("");
         writter.packAndWrite(0, index);
+    }
+
+    private void playerSeesOponentCard(JsonObject jsonObject) {
+        String player = jsonObject.get("player_uid").getAsString();
+        String oponent = jsonObject.get("oponent_uid").getAsString();
+        String card = jsonObject.get("card").getAsString();
+        int oCardIndex = jsonObject.get("card_index").getAsInt();
+
+        System.out.println("Player" + player + " has seen the card of the oponent " + oponent + ", card: "+ card + " card index: " + oCardIndex);
     }
 
     private void playerSwitchCardPlayer(JsonObject jsonObject) {
@@ -223,6 +272,14 @@ public class SignalManager extends Thread {
         int oCardIndex = jsonObject.get("o_card_index").getAsInt();
 
         System.out.println("Player" + player + " has changed his card number: " + pCardIndex + " with player´s " + oponent + " card number: " + oCardIndex);
+    }
+
+    private void askPlayerSwitchCard() {
+        System.out.println("Do you want to switch the cards?");
+        System.out.println("[0] No");
+        System.out.println("[1] Yes");
+        int answer = Utilidades.leerEntero("");
+        writter.packAndWrite(0, answer);
     }
 
 
